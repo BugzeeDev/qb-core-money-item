@@ -1,8 +1,8 @@
 -- Replace every function there by the ones existing in your file -> qb-core/server/player.lua
 
 -- READ THIS
--- !!! I'm USING quasar exports here !!!
--- !!! If you are using qb-inventory replace qs-inventory by qb-inventory !!!
+-- !!! I'm USING original QB-Core exports here !!!
+-- !!! If you are using qs-inventory replace qb-inventory by qs-inventory !!!
 
 function self.Functions.AddMoney(moneytype, amount, reason)
         source = self.PlayerData.source
@@ -13,13 +13,12 @@ function self.Functions.AddMoney(moneytype, amount, reason)
         if not self.PlayerData.money[moneytype] then return false end
         --self.PlayerData.money[moneytype] = self.PlayerData.money[moneytype] + amount
         if moneytype == 'cash' then
-            local item = exports['qs-inventory']:GetItemByName(source,'cash')
-            if exports['qs-inventory']:HasItem(source,'cash') then
-                --local slot = exports['qs-inventory']:GetItemBySlot(self.PlayerData.items,item)
-                local slots = exports['qs-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
-                exports['qs-inventory']:AddItem(source,'cash',amount,slots[1])
+            local item = exports['qb-inventory']:GetItemByName(source,'cash')
+            if exports['qb-inventory']:HasItem(source,'cash') then
+                local slots = exports['qb-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
+                exports['qb-inventory']:AddItem(source,'cash',amount,slots[1])
             else
-                exports['qs-inventory']:AddItem(source,'cash',amount)
+                exports['qb-inventory']:AddItem(source,'cash',amount)
             end
         else
             self.PlayerData.money[moneytype] = self.PlayerData.money[moneytype] + amount
@@ -56,14 +55,14 @@ function self.Functions.RemoveMoney(moneytype, amount, reason)
         end
         --self.PlayerData.money[moneytype] = self.PlayerData.money[moneytype] - amount
         if moneytype == 'cash' then
-            local item = exports['qs-inventory']:GetItemByName(source,'cash')
-            if exports['qs-inventory']:HasItem(source,'cash') then
+            local item = exports['qb-inventory']:GetItemByName(source,'cash')
+            if exports['qb-inventory']:HasItem(source,'cash') then
                 local totalmoney = self.Functions.GetMoney('cash')
                 if totalmoney >= amount then
-                    local slots = exports['qs-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
+                    local slots = exports['qb-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
                     for k,v in pairs(slots) do
-                        local toRemove = math.min(exports['qs-inventory']:GetItemBySlot(source,slots[k]).amount,amount)
-                        exports['qs-inventory']:RemoveItem(source,'cash',toRemove,slots[k])
+                        local toRemove = math.min(exports['qb-inventory']:GetItemBySlot(source,slots[k]).amount,amount)
+                        exports['qb-inventory']:RemoveItem(source,'cash',toRemove,slots[k])
                         amount = amount - toRemove
                     end
                 else
@@ -105,14 +104,14 @@ function self.Functions.RemoveMoney(moneytype, amount, reason)
         --self.PlayerData.money[moneytype] = amount
         local difference = 0
         if moneytype == 'cash' then
-            if exports['qs-inventory']:HasItem(source,'cash') then
-                local item = exports['qs-inventory']:GetItemByName(source,'cash')
-                local slot = exports['qs-inventory']:GetItemBySlot(self.PlayerData.items,item)
-                exports['qs-inventory']:RemoveItem(source,'cash',item.amount,slot)
-                exports['qs-inventory']:AddItem(source,'cash',amount,slot)
+            if exports['qb-inventory']:HasItem(source,'cash') then
+                local item = exports['qb-inventory']:GetItemByName(source,'cash')
+                local slot = exports['qb-inventory']:GetItemBySlot(self.PlayerData.items,item)
+                exports['qb-inventory']:RemoveItem(source,'cash',item.amount,slot)
+                exports['qb-inventory']:AddItem(source,'cash',amount,slot)
                 difference = amount - item.amount
             else
-                exports['qs-inventory']:AddItem(source,'cash',amount)
+                exports['qb-inventory']:AddItem(source,'cash',amount)
                 difference = amount
             end
         else
@@ -138,13 +137,13 @@ function self.Functions.RemoveMoney(moneytype, amount, reason)
         if not moneytype then return false end
         moneytype = moneytype:lower()
         if moneytype == 'cash' then
-            if exports['qs-inventory']:HasItem(source,'cash') then
-                local slots = exports['qs-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
+            if exports['qb-inventory']:HasItem(source,'cash') then
+                local slots = exports['qb-inventory']:GetSlotsByItem(self.PlayerData.items,'cash')
                 local totalmoney = 0
                 for k,v in pairs(slots) do
-                    totalmoney = totalmoney + exports['qs-inventory']:GetItemBySlot(source,slots[k]).amount
+                    totalmoney = totalmoney + exports['qb-inventory']:GetItemBySlot(source,slots[k]).amount
                 end
-                local item = exports['qs-inventory']:GetItemByName(source,'cash')
+                local item = exports['qb-inventory']:GetItemByName(source,'cash')
                 return totalmoney
             else
                 return 0
